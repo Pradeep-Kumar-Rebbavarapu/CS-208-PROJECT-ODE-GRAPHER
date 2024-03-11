@@ -5,6 +5,7 @@ import { Context } from '@/context/Context'
 import React, { useContext } from 'react'
 import PlotGraph from '@/components/Plotting'
 import PolarGraph from '@/components/PolarGraph'
+import ForwardGraph from '@/components/ForwardPlotGraph'
 export default function Main() {
   const { x, y, type,sinactivity,
     setactivity,
@@ -44,7 +45,9 @@ export default function Main() {
         )}
 
         {type == "Forward" && (
-          <h1>Forward Graphs</h1>
+          <div>
+            <ForwardGraph />
+          </div>
         )}
 
         {type == "Backward" && (

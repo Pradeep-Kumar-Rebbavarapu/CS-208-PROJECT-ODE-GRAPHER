@@ -6,7 +6,7 @@ function PolarGraph() {
   const canvasRef = useRef(null);
   const { activity, time } = useContext(Context);
   useEffect(() => {
-    alert(time)
+    
     const ctx = canvasRef.current.getContext("2d");
 
     console.log("Activity:", activity);

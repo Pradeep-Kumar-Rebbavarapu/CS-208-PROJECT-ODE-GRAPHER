@@ -33,39 +33,49 @@ export function InputValues() {
         setPhaseCoherenceValues,
         setTime,
         activity,
+        couplingVals,setcouplingVals,
+        rMean,setrMean,
         setxlim } = useContext(Context)
 
 
     const onSubmit = (e) => {
         const formData = form.getValues();
 
-        
+
         const convertedData = {};
         for (const key in formData) {
             convertedData[key] = parseFloat(formData[key]);
         }
         console.log(activity.length)
-        if (type === "Polar" && (activity.length!=0)) {
-            localStorage.setItem('time',parseInt(formData.time))
+        if (type === "Polar" && (activity.length != 0)) {
+            localStorage.setItem('time', parseInt(formData.time))
             setTime(parseInt(formData.time));
         } else {
-           
+
             console.log(convertedData);
             try {
-                axios.post('http://127.0.0.1:8000/api/v1/__get__angle__values__/', convertedData)
+                const url = type === "Forward" ? "http://127.0.0.1:8000/api/v1/__get__k__vs__r__values__/" : 'http://127.0.0.1:8000/api/v1/__get__angle__values__/'
+                axios.post(url, convertedData)
                     .then((response) => {
                         const data = response.data;
-                        console.log(data);
-                        setactivity(data.activity);
-                        setActivityTranspose(data.activity_transpose);
-                        setSinOfActivityTranspose(data.sin_of_activity_transpose);
-                        setPhaseCoherenceValues(data.phase_coherence_values);
-                        setxlim(data.xlim);
-                        if(type == "Polar"){
-                            localStorage.setItem('time',parseInt(formData.time))
+                        console.log(data)
+                        if (type == "General") {
+                            setactivity(data.activity);
+                            setActivityTranspose(data.activity_transpose);
+                            setSinOfActivityTranspose(data.sin_of_activity_transpose);
+                            setPhaseCoherenceValues(data.phase_coherence_values);
+                            setxlim(data.xlim);
+                        }
+                        if (type == "Forward"){
+                            setcouplingVals(data.coupling_vals)
+                            setrMean(data.r_mean)
+                        }
+
+                        if (type == "Polar") {
+                            localStorage.setItem('time', parseInt(formData.time))
                             setTime(formData.time)
                         }
-                        
+
                     });
             } catch (error) {
                 console.error('Error running Fortran code:', error);
@@ -113,42 +123,115 @@ export function InputValues() {
                             )}
                         />
                     </div>
-                    <div className="mx-10">
-                        <FormField
-                            control={form.control}
-                            name="coupling"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Coupling Value</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="Coupling Value"  {...field} />
-                                    </FormControl>
-                                    <FormDescription>
-                                        Coupling Value
-                                    </FormDescription>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                    </div>
-                    <div className="mx-10">
-                        <FormField
-                            control={form.control}
-                            name="step_size"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Step Size</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="Step Size"  {...field} />
-                                    </FormControl>
-                                    <FormDescription>
-                                        Step Size
-                                    </FormDescription>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                    </div>
+                    {(type == "General" || type == "Polar") && (
+
+                        <div className="mx-10">
+                            <FormField
+                                control={form.control}
+                                name="coupling"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Coupling Value</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="Coupling Value"  {...field} />
+                                        </FormControl>
+                                        <FormDescription>
+                                            Coupling Value
+                                        </FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+                    )}
+                    {(
+                        <div className="mx-10">
+                            <FormField
+                                control={form.control}
+                                name="step_size"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Step Size</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="Step Size"  {...field} />
+                                        </FormControl>
+                                        <FormDescription>
+                                            Step Size
+                                        </FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+                    )}
+
+
+                    {type == "Forward" && (
+
+                        <div className="mx-10">
+                            <FormField
+                                control={form.control}
+                                name="coupling_start"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Coupling Start Value</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="Coupling Start Value"  {...field} />
+                                        </FormControl>
+                                        <FormDescription>
+                                            Coupling Start Value
+                                        </FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+                    )}
+                    {type == "Forward" && (
+                        <div className="mx-10">
+                            <FormField
+                                control={form.control}
+                                name="coupling_step_size"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Coupling Step Size</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="Coupling Step Size"  {...field} />
+                                        </FormControl>
+                                        <FormDescription>
+                                            Coupling Step Size
+                                        </FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+                    )}
+
+                    {type == "Forward" && (
+                        <div className="mx-10">
+                            <FormField
+                                control={form.control}
+                                name="coupling_end"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Coupling End Value</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="Coupling End Value"  {...field} />
+                                        </FormControl>
+                                        <FormDescription>
+                                            Coupling End Value
+                                        </FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+                    )}
+
+
+
+
                     {type == "Polar" && (
                         <div className="mx-10">
                             <FormField
@@ -158,7 +241,7 @@ export function InputValues() {
                                     <FormItem>
                                         <FormLabel>Time</FormLabel>
                                         <FormControl>
-                                            <Input  placeholder="Time"  {...field} />
+                                            <Input placeholder="Time"  {...field} />
                                         </FormControl>
                                         <FormDescription>
                                             Particular Time

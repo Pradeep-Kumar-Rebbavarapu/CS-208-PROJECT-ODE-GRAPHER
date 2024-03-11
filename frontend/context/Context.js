@@ -13,6 +13,8 @@ export const ContextProvider = ({ children }) => {
     const [xlim, setxlim] = useState([])
     const [time, setTime] = useState(null);
     const [type, settype] = useState(null);
+    const [couplingVals,setcouplingVals] = useState([])
+    const [rMean,setrMean] = useState([])
     
     const plotWorkerRef = useRef(null);
    
@@ -37,6 +39,8 @@ export const ContextProvider = ({ children }) => {
         xlim,
         setxlim,
         plotWorkerRef,
+        couplingVals,setcouplingVals,
+        rMean,setrMean
        
     }
 
