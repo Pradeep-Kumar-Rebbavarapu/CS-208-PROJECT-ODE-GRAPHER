@@ -82,7 +82,7 @@ class __get__angle__values__(APIView):
         response = {
             'activity':activity,
             "activity_transpose":activity.T,
-            "sin_of_activity_transpose":np.sin(activity.T),
+            "sin_of_activity_transpose":np.sin(activity.T).tolist(),
             "phase_coherence_values":[Kuramoto.phase_coherence(vec) for vec in activity.T],
             "xlim":[i for i in range(len(activity.T.tolist())+1)],
         }

@@ -24,10 +24,10 @@ export function SelectComponent() {
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
-            <SelectItem value="sin_vs_time">Sin(θ) vs Time</SelectItem>
-            <SelectItem value="r_vs_time">R vs Time</SelectItem>
-            <SelectItem value="sin_vs_cos">Sin(θ) vs Cos(θ)</SelectItem>
-            <SelectItem value="k_vs_r">K vs R</SelectItem>
+            <SelectItem value="General">General Graphs</SelectItem>
+            <SelectItem value="Polar">Polar Graph</SelectItem>
+            <SelectItem value="Forward">Forward Graph</SelectItem>
+            <SelectItem value="Backward">Backward Graph</SelectItem>
           </SelectGroup>
         </SelectContent>
       </Select>

@@ -25,32 +25,54 @@ const formSchema = z.object({
 })
 
 export function InputValues() {
-    
+
     const form = useForm()
-    const {x,setx,y,sety,type,settype} = useContext(Context)
+    const { x, setx, y, sety, type, settype, setactivity,
+        setActivityTranspose,
+        setSinOfActivityTranspose,
+        setPhaseCoherenceValues,
+        setTime,
+        activity,
+        setxlim } = useContext(Context)
 
 
-    const  onSubmit = (e) => {
-        alert('clicked')
+    const onSubmit = (e) => {
+        const formData = form.getValues();
+
+        
         const convertedData = {};
-        for (const key in e) {
-            convertedData[key] = parseFloat(e[key]);
+        for (const key in formData) {
+            convertedData[key] = parseFloat(formData[key]);
         }
-        console.log(convertedData)
-        try {
-            axios.post('http://127.0.0.1:8000/api/v1/__get__angle__values__/', convertedData).then((response)=>{
-                const data = response.data;
-                console.log(data)
-                sety(data.phase_coherence_values)
-                setx(data.xlim)
-                
-            });
-            
-          } catch (error) {
-            console.error('Error running Fortran code:', error);
-          }
-    }
-    
+        console.log(activity.length)
+        if (type === "Polar" && (activity.length!=0)) {
+            localStorage.setItem('time',parseInt(formData.time))
+            setTime(parseInt(formData.time));
+        } else {
+           
+            console.log(convertedData);
+            try {
+                axios.post('http://127.0.0.1:8000/api/v1/__get__angle__values__/', convertedData)
+                    .then((response) => {
+                        const data = response.data;
+                        console.log(data);
+                        setactivity(data.activity);
+                        setActivityTranspose(data.activity_transpose);
+                        setSinOfActivityTranspose(data.sin_of_activity_transpose);
+                        setPhaseCoherenceValues(data.phase_coherence_values);
+                        setxlim(data.xlim);
+                        if(type == "Polar"){
+                            localStorage.setItem('time',parseInt(formData.time))
+                            setTime(formData.time)
+                        }
+                        
+                    });
+            } catch (error) {
+                console.error('Error running Fortran code:', error);
+            }
+        }
+    };
+
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -63,7 +85,7 @@ export function InputValues() {
                                 <FormItem>
                                     <FormLabel>Nodes</FormLabel>
                                     <FormControl>
-                                        <Input  placeholder="Number of Nodes" {...field} />
+                                        <Input placeholder="Number of Nodes" {...field} />
                                     </FormControl>
                                     <FormDescription>
                                         Number of Nodes
@@ -127,8 +149,29 @@ export function InputValues() {
                             )}
                         />
                     </div>
-                    
-                    
+                    {type == "Polar" && (
+                        <div className="mx-10">
+                            <FormField
+                                control={form.control}
+                                name="time"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Time</FormLabel>
+                                        <FormControl>
+                                            <Input  placeholder="Time"  {...field} />
+                                        </FormControl>
+                                        <FormDescription>
+                                            Particular Time
+                                        </FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+                    )}
+
+
+
                 </div>
                 <div className="flex justify-center">
                     <Button type="submit">Submit</Button>
