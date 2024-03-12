@@ -7,6 +7,7 @@ djangorestframework==3.14.0
 f2py-jit==0.10.2
 f90wrap==0.2.13
 fonttools==4.49.0
+gunicorn==21.2.0
 kiwisolver==1.4.5
 kuramoto==0.3.0
 matplotlib==3.8.3
@@ -23,3 +24,4 @@ seaborn==0.13.2
 six==1.16.0
 sqlparse==0.4.4
 tzdata==2024.1
+whitenoise==6.6.0
