@@ -24,242 +24,208 @@ const formSchema = z.object({
     }),
 })
 
+const LoadingOverlay = ({ isLoading }) => {
+    return isLoading ? (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+            <div className="bg-black bg-opacity-50 inset-0 fixed" />
+            <div className="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-32 w-32" />
+        </div>
+    ) : null;
+};
+
 export function InputValues() {
-
     const form = useForm()
-    const { x, setx, y, sety, type, settype, setactivity,
-        setActivityTranspose,
-        setSinOfActivityTranspose,
-        setPhaseCoherenceValues,
-        setTime,
-        activity,
-        couplingVals,setcouplingVals,
-        rMean,setrMean,
-        setxlim } = useContext(Context)
-
+    const { setforward_r1, setforward_r2, setbackward_r1, setbackward_r2, setforward_lambda1, setbackward_lambda1, type, settype,settheta,settime } = useContext(Context)
+    const [isLoading, setIsLoading] = useState(false);
 
     const onSubmit = (e) => {
         const formData = form.getValues();
-
-
         const convertedData = {};
         for (const key in formData) {
             convertedData[key] = parseFloat(formData[key]);
         }
-        console.log(activity.length)
-        if (type === "Polar" && (activity.length != 0)) {
+
+        if (type === "Polar" && (activity.length !== 0)) {
             localStorage.setItem('time', parseInt(formData.time))
             setTime(parseInt(formData.time));
         } else {
+            setIsLoading(true); // Set loading state to true
 
             console.log(convertedData);
             try {
-                const url = type === "Forward" ? "http://127.0.0.1:8000/api/v1/__get__k__vs__r__values__/" : 'http://127.0.0.1:8000/api/v1/__get__angle__values__/'
+                let url;
+                if(type == "Forward"){
+                    url = "http://127.0.0.1:8000/api/v1/__get__k__vs__r__values__/"
+                }
+                if(type == "ThetavsT"){
+                    url = "http://127.0.0.1:8000/api/v1/__get__theta__vs__t__values__/"
+                }
                 axios.post(url, convertedData)
                     .then((response) => {
                         const data = response.data;
                         console.log(data)
-                        if (type == "General") {
-                            setactivity(data.activity);
-                            setActivityTranspose(data.activity_transpose);
-                            setSinOfActivityTranspose(data.sin_of_activity_transpose);
-                            setPhaseCoherenceValues(data.phase_coherence_values);
-                            setxlim(data.xlim);
-                        }
-                        if (type == "Forward"){
-                            setcouplingVals(data.coupling_vals)
-                            setrMean(data.r_mean)
+
+                        if (type == "Forward") {
+                            setforward_r1(data.forward_r1)
+                            setforward_r2(data.forward_r2)
+                            setforward_lambda1(data.forward_lambda1)
+                            setbackward_r1(data.backward_r1)
+                            setbackward_r2(data.backward_r2)
+                            setbackward_lambda1(data.backward_lambda1)
                         }
 
-                        if (type == "Polar") {
-                            localStorage.setItem('time', parseInt(formData.time))
-                            setTime(formData.time)
+                        if (type == "ThetavsT") {
+                            settheta(data.theta)
+                            settime(data.time)
                         }
-
+                    })
+                    .catch((error) => {
+                        console.error('Error running Fortran code:', error);
+                    })
+                    .finally(() => {
+                        setIsLoading(false); // Set loading state to false after API call completes
                     });
             } catch (error) {
                 console.error('Error running Fortran code:', error);
+                setIsLoading(false); // Set loading state to false in case of an error
             }
         }
     };
 
     return (
-        <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                <div className="grid grid-cols-2">
-                    <div className="mx-10">
-                        <FormField
-                            control={form.control}
-                            name="nodes"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Nodes</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="Number of Nodes" {...field} />
-                                    </FormControl>
-                                    <FormDescription>
-                                        Number of Nodes
-                                    </FormDescription>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
+        <>
+            <LoadingOverlay isLoading={isLoading} />
+            <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                    <div className="grid grid-cols-2">
+                        {(type == "Forward" || type=="ThetavsT") && (
+                            <div className="mx-10">
+                                <FormField
+                                    control={form.control}
+                                    name="ndim"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Number of Oscillators</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="Number of Oscillators" {...field} />
+                                            </FormControl>
+                                            <FormDescription>
+                                                Number of Oscillators
+                                            </FormDescription>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
+                        )}
+
+                        {type == "Forward" && (
+                            <div className="mx-10">
+                                <FormField
+                                    control={form.control}
+                                    name="lambda1_start"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Coupling Start Value</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="Coupling Start Value" {...field} />
+                                            </FormControl>
+                                            <FormDescription>
+                                                Coupling Start Value
+                                            </FormDescription>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
+                        )}
+
+                        {type == "Forward" && (
+                            <div className="mx-10">
+                                <FormField
+                                    control={form.control}
+                                    name="lambda1_end"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Coupling End Value</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="Coupling End Value" {...field} />
+                                            </FormControl>
+                                            <FormDescription>
+                                                Coupling End Value
+                                            </FormDescription>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
+                        )}
+                        {type=="ThetavsT" && (
+                            <div className="mx-10">
+                                <FormField
+                                    control={form.control}
+                                    name="lambda1"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Coupling Strength 1</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="Coupling Strength 1" {...field} />
+                                            </FormControl>
+                                            <FormDescription>
+                                                Coupling Strength 1
+                                            </FormDescription>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
+                        )}
+                        {(type == "Forward" || type=="ThetavsT") && (
+                            <div className="mx-10">
+                                <FormField
+                                    control={form.control}
+                                    name="lambda2"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Coupling Strength 2</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="Coupling Strength 2" {...field} />
+                                            </FormControl>
+                                            <FormDescription>
+                                                Coupling Strength 2
+                                            </FormDescription>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
+                        )}
+                        {(type == "Forward" || type=="ThetavsT") && (
+                            <div className="mx-10">
+                                <FormField
+                                    control={form.control}
+                                    name="lambda3"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Coupling Strength 3</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="Coupling Strength 3" {...field} />
+                                            </FormControl>
+                                            <FormDescription>
+                                                Coupling Strength 3
+                                            </FormDescription>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
+                        )}
                     </div>
-                    <div className="mx-10">
-                        <FormField
-                            control={form.control}
-                            name="total_duration"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Total Duration</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="Total Duration"  {...field} />
-                                    </FormControl>
-                                    <FormDescription>
-                                        Total Duration
-                                    </FormDescription>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
+                    <div className="flex justify-center">
+                        <Button type="submit">Submit</Button>
                     </div>
-                    {(type == "General" || type == "Polar") && (
-
-                        <div className="mx-10">
-                            <FormField
-                                control={form.control}
-                                name="coupling"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Coupling Value</FormLabel>
-                                        <FormControl>
-                                            <Input placeholder="Coupling Value"  {...field} />
-                                        </FormControl>
-                                        <FormDescription>
-                                            Coupling Value
-                                        </FormDescription>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                        </div>
-                    )}
-                    {(
-                        <div className="mx-10">
-                            <FormField
-                                control={form.control}
-                                name="step_size"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Step Size</FormLabel>
-                                        <FormControl>
-                                            <Input placeholder="Step Size"  {...field} />
-                                        </FormControl>
-                                        <FormDescription>
-                                            Step Size
-                                        </FormDescription>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                        </div>
-                    )}
-
-
-                    {type == "Forward" && (
-
-                        <div className="mx-10">
-                            <FormField
-                                control={form.control}
-                                name="coupling_start"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Coupling Start Value</FormLabel>
-                                        <FormControl>
-                                            <Input placeholder="Coupling Start Value"  {...field} />
-                                        </FormControl>
-                                        <FormDescription>
-                                            Coupling Start Value
-                                        </FormDescription>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                        </div>
-                    )}
-                    {type == "Forward" && (
-                        <div className="mx-10">
-                            <FormField
-                                control={form.control}
-                                name="coupling_step_size"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Coupling Step Size</FormLabel>
-                                        <FormControl>
-                                            <Input placeholder="Coupling Step Size"  {...field} />
-                                        </FormControl>
-                                        <FormDescription>
-                                            Coupling Step Size
-                                        </FormDescription>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                        </div>
-                    )}
-
-                    {type == "Forward" && (
-                        <div className="mx-10">
-                            <FormField
-                                control={form.control}
-                                name="coupling_end"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Coupling End Value</FormLabel>
-                                        <FormControl>
-                                            <Input placeholder="Coupling End Value"  {...field} />
-                                        </FormControl>
-                                        <FormDescription>
-                                            Coupling End Value
-                                        </FormDescription>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                        </div>
-                    )}
-
-
-
-
-                    {type == "Polar" && (
-                        <div className="mx-10">
-                            <FormField
-                                control={form.control}
-                                name="time"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Time</FormLabel>
-                                        <FormControl>
-                                            <Input placeholder="Time"  {...field} />
-                                        </FormControl>
-                                        <FormDescription>
-                                            Particular Time
-                                        </FormDescription>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                        </div>
-                    )}
-
-
-
-                </div>
-                <div className="flex justify-center">
-                    <Button type="submit">Submit</Button>
-                </div>
-            </form>
-        </Form>
+                </form>
+            </Form>
+        </>
     )
 }

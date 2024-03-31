@@ -24,9 +24,8 @@ export function SelectComponent() {
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
-            <SelectItem value="General">General Graphs</SelectItem>
-            <SelectItem value="Polar">Polar Graph</SelectItem>
             <SelectItem value="Forward">Forward Graph</SelectItem>
+            <SelectItem value="ThetavsT">ThetavsT Graph</SelectItem>
             <SelectItem value="Backward">Backward Graph</SelectItem>
           </SelectGroup>
         </SelectContent>
