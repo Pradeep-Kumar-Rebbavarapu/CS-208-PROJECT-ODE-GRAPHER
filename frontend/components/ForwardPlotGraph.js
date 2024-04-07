@@ -15,51 +15,23 @@ const ChartContainer = ({ chartRef, chartData, chartOptions, ariaLabel }) => {
   }, [chartRef, chartData, chartOptions]);
 
   return (
-    <div className="border border-gray-400 rounded-xl shadow-xl">
+    <div className="relative h-screen">
       <canvas ref={chartRef} aria-label={ariaLabel}></canvas>
     </div>
   );
 };
 
-const ForwardGraph = ({
-  forward_r1,
-  forward_r2,
-  forward_lambda1,
-  backward_r1,
-  backward_r2,
-  backward_lambda1,
-}) => {
+export default function Graph({ forward_r1, forward_lambda1, backward_r1, backward_lambda1 }) {
   const forwardR1Ref = useRef(null);
-  const forwardR2Ref = useRef(null);
   const backwardR1Ref = useRef(null);
-  const backwardR2Ref = useRef(null);
 
   const forwardR1ChartData = {
     datasets: [
       {
-        data: forward_lambda1?.map((val, index) => ({
-          x: val,
-          y: forward_r1[index],
-        })),
-        label: 'r1 vs lambda1 (Forward)',
+        data: forward_lambda1?.map((val, index) => ({ x: val, y: forward_r1[index] })),
+        label: 'k1 vs r1 (Forward)',
         borderColor: 'rgb(75, 192, 192)',
         backgroundColor: 'rgba(75, 192, 192, 0.5)',
-        pointRadius: 5,
-        pointHoverRadius: 8,
-      },
-    ],
-  };
-
-  const forwardR2ChartData = {
-    datasets: [
-      {
-        data: forward_lambda1?.map((val, index) => ({
-          x: val,
-          y: forward_r2[index],
-        })),
-        label: 'r2 vs lambda1 (Forward)',
-        borderColor: 'rgb(192, 75, 192)',
-        backgroundColor: 'rgba(192, 75, 192, 0.5)',
         pointRadius: 5,
         pointHoverRadius: 8,
       },
@@ -69,29 +41,10 @@ const ForwardGraph = ({
   const backwardR1ChartData = {
     datasets: [
       {
-        data: backward_lambda1?.map((val, index) => ({
-          x: val,
-          y: backward_r1[index],
-        })),
-        label: 'r1 vs lambda1 (Backward)',
-        borderColor: 'rgb(75, 192, 192)',
-        backgroundColor: 'rgba(75, 192, 192, 0.5)',
-        pointRadius: 5,
-        pointHoverRadius: 8,
-      },
-    ],
-  };
-
-  const backwardR2ChartData = {
-    datasets: [
-      {
-        data: backward_lambda1?.map((val, index) => ({
-          x: val,
-          y: backward_r2[index],
-        })),
-        label: 'r2 vs lambda1 (Backward)',
-        borderColor: 'rgb(192, 75, 192)',
-        backgroundColor: 'rgba(192, 75, 192, 0.5)',
+        data: backward_lambda1?.map((val, index) => ({ x: val, y: backward_r1[index] })),
+        label: 'k1 vs r1 (Backward)',
+        borderColor: 'rgb(255, 99, 132)',
+        backgroundColor: 'rgba(255, 99, 132, 0.5)',
         pointRadius: 5,
         pointHoverRadius: 8,
       },
@@ -107,7 +60,7 @@ const ForwardGraph = ({
         position: 'bottom',
         title: {
           display: true,
-          text: 'lambda1',
+          text: 'k1',
         },
       },
       y: {
@@ -115,7 +68,7 @@ const ForwardGraph = ({
         position: 'left',
         title: {
           display: true,
-          text: 'r',
+          text: 'r1',
         },
       },
     },
@@ -133,46 +86,39 @@ const ForwardGraph = ({
   };
 
   return (
-    <div className=" mx-auto px-4">
-      <h1 className="text-3xl font-bold mb-8">Forward and Backward Graphs</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div>
-          <h2 className="text-2xl font-bold mb-4">Forward Graphs</h2>
-          <div className="grid grid-cols-1  gap-4">
+    <div className="relative flex flex-col min-w-0 break-words w-full mb-6  rounded bg-blueGray-700">
+      <div className="rounded-t mb-0 px-4 py-3 bg-transparent">
+        <div className="flex flex-wrap items-center">
+          <div className="relative w-full max-w-full flex-grow flex-1">
+            <h6 className="uppercase text-white bg-blueGray-700 mb-1 text-xs font-semibold">
+              Overview
+            </h6>
+            <h2 className="text-white text-xl font-semibold ">K vs R1 (Forward & Backward)</h2>
+          </div>
+        </div>
+      </div>
+      <div className="p-4 flex-auto">
+        <div className="grid grid-cols-1  ">
+          <div>
+            <h2 className="text-white text-lg font-semibold ">R1 Case (Forward)</h2>
             <ChartContainer
               chartRef={forwardR1Ref}
               chartData={forwardR1ChartData}
               chartOptions={chartOptions}
-              ariaLabel="Forward R1 vs Lambda1"
-            />
-            <ChartContainer
-              chartRef={forwardR2Ref}
-              chartData={forwardR2ChartData}
-              chartOptions={chartOptions}
-              ariaLabel="Forward R2 vs Lambda1"
+              ariaLabel="Forward k1 vs r1"
             />
           </div>
-        </div>
-        <div>
-          <h2 className="text-2xl font-bold mb-4">Backward Graphs</h2>
-          <div className="grid grid-cols-1  gap-4">
+          <div>
+            <h2 className="text-white text-lg font-semibold ">R1 Case (Backward)</h2>
             <ChartContainer
               chartRef={backwardR1Ref}
               chartData={backwardR1ChartData}
               chartOptions={chartOptions}
-              ariaLabel="Backward R1 vs Lambda1"
-            />
-            <ChartContainer
-              chartRef={backwardR2Ref}
-              chartData={backwardR2ChartData}
-              chartOptions={chartOptions}
-              ariaLabel="Backward R2 vs Lambda1"
+              ariaLabel="Backward k1 vs r1"
             />
           </div>
         </div>
       </div>
     </div>
   );
-};
-
-export default ForwardGraph;
+}

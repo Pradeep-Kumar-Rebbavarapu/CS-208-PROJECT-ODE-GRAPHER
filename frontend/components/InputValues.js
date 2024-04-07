@@ -35,7 +35,7 @@ const LoadingOverlay = ({ isLoading }) => {
 
 export function InputValues() {
     const form = useForm()
-    const { setforward_r1, setforward_r2, setbackward_r1, setbackward_r2, setforward_lambda1, setbackward_lambda1, type, settype,settheta,settime } = useContext(Context)
+    const { setforward_r1, setforward_r2, setbackward_r1, setbackward_r2, setforward_lambda1, setbackward_lambda1, type, settype, settheta, settime } = useContext(Context)
     const [isLoading, setIsLoading] = useState(false);
 
     const onSubmit = (e) => {
@@ -49,13 +49,13 @@ export function InputValues() {
             localStorage.setItem('time', parseInt(formData.time))
             setTime(parseInt(formData.time));
         } else {
-            setIsLoading(true); // Set loading state to true
+            setIsLoading(true); 
 
             console.log(convertedData);
             try {
                 let url;
                 if(type == "Forward"){
-                    url = "http://127.0.0.1:8000/api/v1/__get__k__vs__r__values__/"
+                    url = "http://127.0.0.1:8000/api/v1/oscillators/"
                 }
                 if(type == "ThetavsT"){
                     url = "http://127.0.0.1:8000/api/v1/__get__theta__vs__t__values__/"
@@ -66,12 +66,10 @@ export function InputValues() {
                         console.log(data)
 
                         if (type == "Forward") {
-                            setforward_r1(data.forward_r1)
-                            setforward_r2(data.forward_r2)
-                            setforward_lambda1(data.forward_lambda1)
-                            setbackward_r1(data.backward_r1)
-                            setbackward_r2(data.backward_r2)
-                            setbackward_lambda1(data.backward_lambda1)
+                            setforward_r1(data.r1_values_forward)
+                            setforward_lambda1(data.k1_values_forward)
+                            setbackward_r1(data.r1_values_backward)
+                            setbackward_lambda1(data.k1_values_backward)
                         }
 
                         if (type == "ThetavsT") {
@@ -96,22 +94,20 @@ export function InputValues() {
         <>
             <LoadingOverlay isLoading={isLoading} />
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                    <div className="grid grid-cols-2">
-                        {(type == "Forward" || type=="ThetavsT") && (
-                            <div className="mx-10">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-3xl mx-auto">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        {(type === "Forward" || type === "ThetavsT") && (
+                            <div>
                                 <FormField
                                     control={form.control}
-                                    name="ndim"
+                                    name="n"
                                     render={({ field }) => (
-                                        <FormItem>
+                                        <FormItem className="mb-6">
                                             <FormLabel>Number of Oscillators</FormLabel>
                                             <FormControl>
-                                                <Input placeholder="Number of Oscillators" {...field} />
+                                                <Input placeholder="Number of Oscillators" {...field} className="w-full" />
                                             </FormControl>
-                                            <FormDescription>
-                                                Number of Oscillators
-                                            </FormDescription>
+                                            
                                             <FormMessage />
                                         </FormItem>
                                     )}
@@ -119,20 +115,18 @@ export function InputValues() {
                             </div>
                         )}
 
-                        {type == "Forward" && (
-                            <div className="mx-10">
+                        {type === "Forward" && (
+                            <div>
                                 <FormField
                                     control={form.control}
-                                    name="lambda1_start"
+                                    name="k1_start"
                                     render={({ field }) => (
-                                        <FormItem>
+                                        <FormItem className="mb-6">
                                             <FormLabel>Coupling Start Value</FormLabel>
                                             <FormControl>
-                                                <Input placeholder="Coupling Start Value" {...field} />
+                                                <Input placeholder="Coupling Start Value" {...field} className="w-full" />
                                             </FormControl>
-                                            <FormDescription>
-                                                Coupling Start Value
-                                            </FormDescription>
+                                            
                                             <FormMessage />
                                         </FormItem>
                                     )}
@@ -140,88 +134,66 @@ export function InputValues() {
                             </div>
                         )}
 
-                        {type == "Forward" && (
-                            <div className="mx-10">
+                        {type === "Forward" && (
+                            <div>
                                 <FormField
                                     control={form.control}
-                                    name="lambda1_end"
+                                    name="k1_end"
                                     render={({ field }) => (
-                                        <FormItem>
+                                        <FormItem className="mb-6">
                                             <FormLabel>Coupling End Value</FormLabel>
                                             <FormControl>
-                                                <Input placeholder="Coupling End Value" {...field} />
+                                                <Input placeholder="Coupling End Value" {...field} className="w-full" />
                                             </FormControl>
-                                            <FormDescription>
-                                                Coupling End Value
-                                            </FormDescription>
+                                            
                                             <FormMessage />
                                         </FormItem>
                                     )}
                                 />
                             </div>
                         )}
-                        {type=="ThetavsT" && (
-                            <div className="mx-10">
+
+                        {type === "ThetavsT" && (
+                            <div>
                                 <FormField
                                     control={form.control}
-                                    name="lambda1"
+                                    name="k1"
                                     render={({ field }) => (
-                                        <FormItem>
+                                        <FormItem className="mb-6">
                                             <FormLabel>Coupling Strength 1</FormLabel>
                                             <FormControl>
-                                                <Input placeholder="Coupling Strength 1" {...field} />
+                                                <Input placeholder="Coupling Strength 1" {...field} className="w-full" />
                                             </FormControl>
-                                            <FormDescription>
-                                                Coupling Strength 1
-                                            </FormDescription>
+                                           
                                             <FormMessage />
                                         </FormItem>
                                     )}
                                 />
                             </div>
                         )}
-                        {(type == "Forward" || type=="ThetavsT") && (
-                            <div className="mx-10">
+
+                        {(type === "Forward" || type === "ThetavsT") && (
+                            <div>
                                 <FormField
                                     control={form.control}
-                                    name="lambda2"
+                                    name="k2"
                                     render={({ field }) => (
-                                        <FormItem>
+                                        <FormItem className="mb-6">
                                             <FormLabel>Coupling Strength 2</FormLabel>
                                             <FormControl>
-                                                <Input placeholder="Coupling Strength 2" {...field} />
+                                                <Input placeholder="Coupling Strength 2" {...field} className="w-full" />
                                             </FormControl>
-                                            <FormDescription>
-                                                Coupling Strength 2
-                                            </FormDescription>
+                                            
                                             <FormMessage />
                                         </FormItem>
                                     )}
                                 />
                             </div>
                         )}
-                        {(type == "Forward" || type=="ThetavsT") && (
-                            <div className="mx-10">
-                                <FormField
-                                    control={form.control}
-                                    name="lambda3"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Coupling Strength 3</FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="Coupling Strength 3" {...field} />
-                                            </FormControl>
-                                            <FormDescription>
-                                                Coupling Strength 3
-                                            </FormDescription>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                            </div>
-                        )}
+
+                        
                     </div>
-                    <div className="flex justify-center">
+                    <div className="flex justify-center mt-8">
                         <Button type="submit">Submit</Button>
                     </div>
                 </form>

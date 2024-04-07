@@ -17,21 +17,11 @@ export default function Graph({
         labels: forward_lambda1,
         datasets: [
           {
-            label: "K vs R1 (Forward)",
+            label: "K1 vs R1 (Forward)",
             backgroundColor: "#4c51bf",
             borderColor: "#4c51bf",
             data: forward_r1?.map((value, index) => ({
               x: forward_lambda1[index],
-              y: value,
-            })),
-            fill: false,
-          },
-          {
-            label: "K vs R1 (Backward)",
-            backgroundColor: "#ff0000",
-            borderColor: "#ff0000",
-            data: backward_r1?.map((value, index) => ({
-              x: backward_lambda1[index],
               y: value,
             })),
             fill: false,
@@ -53,20 +43,10 @@ export default function Graph({
         labels: forward_lambda1,
         datasets: [
           {
-            label: "K vs R2 (Forward)",
-            backgroundColor: "#10b981",
-            borderColor: "#10b981",
-            data: forward_r2?.map((value, index) => ({
-              x: forward_lambda1[index],
-              y: value,
-            })),
-            fill: false,
-          },
-          {
-            label: "K vs R2 (Backward)",
+            label: "K1 vs R1 (Backward)",
             backgroundColor: "#ff0000",
             borderColor: "#ff0000",
-            data: backward_r2?.map((value, index) => ({
+            data: backward_r1?.map((value, index) => ({
               x: backward_lambda1[index],
               y: value,
             })),
@@ -92,7 +72,7 @@ export default function Graph({
 
   return (
     <>
-      <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded bg-blueGray-700">
+      <div className="relative flex flex-col min-w-0 break-words w-full   rounded bg-blueGray-700">
         <div className="rounded-t mb-0 px-4 py-3 bg-transparent">
           <div className="flex flex-wrap items-center">
             <div className="relative w-full max-w-full flex-grow flex-1">
@@ -107,14 +87,14 @@ export default function Graph({
         </div>
         <div className="p-4 flex-auto">
           {/* R1 Chart */}
-          <div className="relative h-screen">
-            <h2 className="text-white text-lg font-semibold mb-4">R1 Case</h2>
+          <div className="relative ">
+            <h2 className="text-white text-lg font-semibold ">R1 Case</h2>
             <canvas id="r1-chart"></canvas>
           </div>
 
           {/* R2 Chart */}
-          <div className="relative h-screen">
-            <h2 className="text-white text-lg font-semibold mb-4">R2 Case</h2>
+          <div className="relative ">
+            <h2 className="text-white text-lg font-semibold">R2 Case</h2>
             <canvas id="r2-chart"></canvas>
           </div>
         </div>
