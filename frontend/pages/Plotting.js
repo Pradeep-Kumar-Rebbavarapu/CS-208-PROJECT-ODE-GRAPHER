@@ -1,10 +1,13 @@
-import Circle from '@/components/Circle';
-import Hero from '@/components/Hero';
-import React, { useEffect, useRef } from 'react';
+import JustBg from '@/components/JustBg';
+import NewPlotting from '@/components/NewPlotting';
+import { Context } from '@/context/Context';
 import Link from 'next/link';
+import React, { useContext, useEffect, useRef } from 'react';
+
 const Home = () => {
   const containerRef = useRef(null);
   const hamburgerMenuRef = useRef(null);
+  const { type, settype } = useContext(Context);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -14,6 +17,10 @@ const Home = () => {
       container.classList.toggle('active');
       document.getElementById('container').classList.toggle('bg-white');
       document.getElementById('container').classList.toggle('bg-opacity-10');
+
+      if (type && type === "Forward") {
+        settype(null)
+      }
     };
 
     hamburgerMenu.addEventListener('click', handleClick);
@@ -24,55 +31,56 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="container" ref={containerRef}>
-
-      <div className="navbar">
-        <div className="menu">
-          <h3 className="logo">
-            Kuramoto<span> Oscillator</span>
-          </h3>
-          <div className="hamburger-menu" ref={hamburgerMenuRef}>
-            <div className="bar"></div>
-          </div>
-        </div>
-
-      </div>
-
-      <div className="main-container">
-
-        <div className="main ">
-
-          <div id="container" className="container  !w-screen">
-            <Hero />
-
+    <div className='!overflow-hidden'>
+      <div className="container !overflow-hidden" ref={containerRef}>
+        <JustBg />
+        <div className="navbar">
+          <div className="menu">
+            <h3 className="logo">
+              Kuramoto<span> Oscillator</span>
+            </h3>
+            <div className="hamburger-menu" ref={hamburgerMenuRef}>
+              <div className="bar"></div>
+            </div>
           </div>
 
         </div>
-        <div id="shadow" className="shadow one "></div>
-        <div id="shadow" className="shadow two "></div>
-      </div>
 
-      <div className="links">
-        <ul>
-          <li>
-            <a href="/" style={{ '--i': '0.05s' }}>
-              Home
-            </a>
-          </li>
-          <li>
-            <a href="/Plotting" style={{ '--i': '0.1s' }}>
-              Plotting
-            </a>
-          </li>
-          <li>
-            <a href="/AboutProject" style={{ '--i': '0.15s' }}>
-              About Project
-            </a>
-          </li>
-        </ul>
-      </div>
+        <div className="main-container">
 
-      <style jsx>{`
+          <div className="main ">
+
+            <div id="container" className="container  !w-screen">
+              <NewPlotting />
+
+            </div>
+
+          </div>
+          <div id="shadow" className="shadow one "></div>
+          <div id="shadow" className="shadow two "></div>
+        </div>
+
+        <div className="links">
+          <ul>
+            <li>
+              <a href="/" style={{ '--i': '0.05s' }}>
+                Home
+              </a>
+            </li>
+            <li>
+              <a href="/Plotting" style={{ '--i': '0.1s' }}>
+                Plotting
+              </a>
+            </li>
+            <li>
+              <a href="/AboutProject" style={{ '--i': '0.15s' }}>
+                About Project
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <style jsx>{`
        
 
         * {
@@ -515,8 +523,10 @@ const Home = () => {
         }
         
       `}</style>
+      </div>
     </div>
   );
+
 };
 
 export default Home;

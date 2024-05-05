@@ -11,7 +11,7 @@ export const ContextProvider = ({ children }) => {
     const [backward_r1, setbackward_r1] = useState(null);
     const [backward_r2, setbackward_r2] = useState(null);
     const [backward_lambda1, setbackward_lambda1] = useState(null);
-    const [type, settype] = useState(null)
+    const [type, settype] = useState('Forward')
     const [theta, settheta] = useState(null)
     const [time, settime] = useState(null)
 

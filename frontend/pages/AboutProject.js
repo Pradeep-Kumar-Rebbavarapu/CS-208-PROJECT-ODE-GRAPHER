@@ -1,78 +1,117 @@
-import Circle from '@/components/Circle';
-import Hero from '@/components/Hero';
+import JustBg from '@/components/JustBg';
 import React, { useEffect, useRef } from 'react';
 import Link from 'next/link';
-const Home = () => {
-  const containerRef = useRef(null);
-  const hamburgerMenuRef = useRef(null);
+const AboutProject = () => {
+    const containerRef = useRef(null);
+    const hamburgerMenuRef = useRef(null);
 
-  useEffect(() => {
-    const container = containerRef.current;
-    const hamburgerMenu = hamburgerMenuRef.current;
+    useEffect(() => {
+        const container = containerRef.current;
+        const hamburgerMenu = hamburgerMenuRef.current;
 
-    const handleClick = () => {
-      container.classList.toggle('active');
-      document.getElementById('container').classList.toggle('bg-white');
-      document.getElementById('container').classList.toggle('bg-opacity-10');
-    };
+        const handleClick = () => {
+            container.classList.toggle('active');
+            document.getElementById('container').classList.toggle('bg-white');
+            document.getElementById('container').classList.toggle('bg-opacity-10');
+        };
 
-    hamburgerMenu.addEventListener('click', handleClick);
+        hamburgerMenu.addEventListener('click', handleClick);
 
-    return () => {
-      hamburgerMenu.removeEventListener('click', handleClick);
-    };
-  }, []);
+        return () => {
+            hamburgerMenu.removeEventListener('click', handleClick);
+        };
+    }, []);
 
-  return (
-    <div className="container" ref={containerRef}>
+    return (
+        <div className="container" ref={containerRef}>
+            <JustBg />
+            <div className="navbar">
+                <div className="menu">
+                    <h3 className="logo">
+                        Kuramoto<span> Oscillator</span>
+                    </h3>
+                    <div className="hamburger-menu" ref={hamburgerMenuRef}>
+                        <div className="bar"></div>
+                    </div>
+                </div>
 
-      <div className="navbar">
-        <div className="menu">
-          <h3 className="logo">
-            Kuramoto<span> Oscillator</span>
-          </h3>
-          <div className="hamburger-menu" ref={hamburgerMenuRef}>
-            <div className="bar"></div>
-          </div>
-        </div>
+            </div>
 
-      </div>
+            <div className="main-container !text-white">
 
-      <div className="main-container">
+                <div className="main ">
 
-        <div className="main ">
+                    <div id="container" className="container !flex !flex-col !w-screen">
+                        <div className='!p-4 !m-4 text-center'>The Kuramoto Oscillator is a mathematical model used to describe the synchronization behavior of coupled oscillators. It was introduced by Yoshiki Kuramoto in 1975 and has found applications in various fields, including physics, biology, and social sciences.
+                            The model considers a population of coupled oscillators, where each oscillator is characterized by its phase and natural frequency. The oscillators are coupled through a sinusoidal coupling function, which represents the interaction between them. The strength of the coupling is determined by a coupling constant.
+                            The Kuramoto Oscillator model aims to study how the oscillators synchronize their phases as a result of the coupling. Depending on the natural frequencies of the oscillators and the coupling strength, the system can exhibit different synchronization patterns, ranging from complete synchronization, where all oscillators have the same phase, to partial synchronization, where clusters of synchronized oscillators coexist with unsynchronized ones.</div>
+                        <div className="mb-8">
+                            <h1 className="text-3xl font-bold text-center !mb-4">Kuramoto Oscillator Equation</h1>
+                            <div className=" rounded-lg p-6 flex justify-center flex-col items-center">
 
-          <div id="container" className="container  !w-screen">
-            <Hero />
+                                <div className="equation flex border-2 bg-white text-indigo-500 !p-4 rounded-md justify-center items-center !mb-4 !w-fit">
+                                    <p className="text-xl font-bold">
+                                        <span className="fraction">
+                                            <span className="frac-num">dθ<sub>i</sub></span>
+                                            <span className="frac-line"></span>
+                                            <span className="frac-den">dt</span>
+                                        </span>
+                                        &nbsp;=&nbsp;ω<sub>i</sub>&nbsp;+&nbsp;
+                                        <span className="fraction">
+                                            <span className="frac-num">K<sub>1</sub></span>
+                                            <span className="frac-line"></span>
+                                            <span className="frac-den">N</span>
+                                        </span>
+                                        &sum;<sub>j=1</sub> sin(θ<sub>j</sub> - θ<sub>i</sub>)&nbsp;+&nbsp;
+                                        <span className="fraction">
+                                            <span className="frac-num">K<sub>2</sub></span>
+                                            <span className="frac-line"></span>
+                                            <span className="frac-den">N<sup>2</sup></span>
+                                        </span>
+                                        &sum;<sub>j=1</sub> sin(2θ<sub>j</sub> - 2θ<sub>i</sub>)
+                                    </p>
+                                </div>
+                                <div className="parameter-descriptions">
+                                    <h3 className="text-lg font-semibold mb-2">Parameter Descriptions</h3>
+                                    <ul className="list-disc pl-4">
+                                        <li>θ<sub>i</sub>: Phase of the i<sup>th</sup> oscillator</li>
+                                        <li>ω<sub>i</sub>: Natural frequency of the i<sup>th</sup> oscillator</li>
+                                        <li>K<sub>1</sub>: Coupling strength for pairwise interactions</li>
+                                        <li>K<sub>2</sub>: Coupling strength for higher-order interactions</li>
+                                        <li>N: Number of oscillators</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
 
-          </div>
+                    </div>
 
-        </div>
-        <div id="shadow" className="shadow one "></div>
-        <div id="shadow" className="shadow two "></div>
-      </div>
+                </div>
+                <div id="shadow" className="shadow one "></div>
+                <div id="shadow" className="shadow two "></div>
+            </div>
 
-      <div className="links">
-        <ul>
-          <li>
-            <a href="/" style={{ '--i': '0.05s' }}>
-              Home
-            </a>
-          </li>
-          <li>
-            <a href="/Plotting" style={{ '--i': '0.1s' }}>
-              Plotting
-            </a>
-          </li>
-          <li>
-            <a href="/AboutProject" style={{ '--i': '0.15s' }}>
-              About Project
-            </a>
-          </li>
-        </ul>
-      </div>
+            <div className="links">
+                <ul>
+                    <li>
+                        <a href="/" style={{ '--i': '0.05s' }}>
+                            Home
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/Plotting" style={{ '--i': '0.1s' }}>
+                            Plotting
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/AboutProject" style={{ '--i': '0.15s' }}>
+                            About Project
+                        </a>
+                    </li>
+                </ul>
+            </div>
 
-      <style jsx>{`
+            <style jsx>{`
        
 
         * {
@@ -515,8 +554,8 @@ const Home = () => {
         }
         
       `}</style>
-    </div>
-  );
+        </div>
+    );
 };
 
-export default Home;
+export default AboutProject;

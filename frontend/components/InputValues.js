@@ -28,7 +28,7 @@ const LoadingOverlay = ({ isLoading }) => {
     return isLoading ? (
         <div className="fixed inset-0 flex items-center justify-center z-50">
             <div className="bg-black bg-opacity-50 inset-0 fixed" />
-            <div className="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-32 w-32" />
+            
         </div>
     ) : null;
 };
@@ -54,9 +54,7 @@ export function InputValues() {
             console.log(convertedData);
             try {
                 let url;
-                if(type == "Forward"){
-                    url = "http://127.0.0.1:8000/api/v1/oscillators/"
-                }
+                url = "http://127.0.0.1:8000/api/v1/oscillators/"
                 if(type == "ThetavsT"){
                     url = "http://127.0.0.1:8000/api/v1/__get__theta__vs__t__values__/"
                 }
@@ -65,12 +63,10 @@ export function InputValues() {
                         const data = response.data;
                         console.log(data)
 
-                        if (type == "Forward") {
                             setforward_r1(data.r1_values_forward)
                             setforward_lambda1(data.k1_values_forward)
                             setbackward_r1(data.r1_values_backward)
                             setbackward_lambda1(data.k1_values_backward)
-                        }
 
                         if (type == "ThetavsT") {
                             settheta(data.theta)
@@ -91,19 +87,19 @@ export function InputValues() {
     };
 
     return (
-        <>
+        <div className="text-black">
             <LoadingOverlay isLoading={isLoading} />
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-3xl mx-auto">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        {(type === "Forward" || type === "ThetavsT") && (
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+                        
                             <div>
                                 <FormField
                                     control={form.control}
                                     name="n"
                                     render={({ field }) => (
                                         <FormItem className="mb-6">
-                                            <FormLabel>Number of Oscillators</FormLabel>
+                                            <FormLabel className="text-white">Number of Oscillators</FormLabel>
                                             <FormControl>
                                                 <Input placeholder="Number of Oscillators" {...field} className="w-full" />
                                             </FormControl>
@@ -113,16 +109,16 @@ export function InputValues() {
                                     )}
                                 />
                             </div>
-                        )}
+                        
 
-                        {type === "Forward" && (
+                        
                             <div>
                                 <FormField
                                     control={form.control}
                                     name="k1_start"
                                     render={({ field }) => (
                                         <FormItem className="mb-6">
-                                            <FormLabel>Coupling Start Value</FormLabel>
+                                            <FormLabel className="text-white">Coupling Start Value</FormLabel>
                                             <FormControl>
                                                 <Input placeholder="Coupling Start Value" {...field} className="w-full" />
                                             </FormControl>
@@ -132,16 +128,16 @@ export function InputValues() {
                                     )}
                                 />
                             </div>
-                        )}
+                        
 
-                        {type === "Forward" && (
+                        
                             <div>
                                 <FormField
                                     control={form.control}
                                     name="k1_end"
                                     render={({ field }) => (
                                         <FormItem className="mb-6">
-                                            <FormLabel>Coupling End Value</FormLabel>
+                                            <FormLabel className="text-white">Coupling End Value</FormLabel>
                                             <FormControl>
                                                 <Input placeholder="Coupling End Value" {...field} className="w-full" />
                                             </FormControl>
@@ -151,7 +147,7 @@ export function InputValues() {
                                     )}
                                 />
                             </div>
-                        )}
+                        
 
                         {type === "ThetavsT" && (
                             <div>
@@ -160,7 +156,7 @@ export function InputValues() {
                                     name="k1"
                                     render={({ field }) => (
                                         <FormItem className="mb-6">
-                                            <FormLabel>Coupling Strength 1</FormLabel>
+                                            <FormLabel className="text-white">Coupling Strength 1</FormLabel>
                                             <FormControl>
                                                 <Input placeholder="Coupling Strength 1" {...field} className="w-full" />
                                             </FormControl>
@@ -172,14 +168,14 @@ export function InputValues() {
                             </div>
                         )}
 
-                        {(type === "Forward" || type === "ThetavsT") && (
+                        
                             <div>
                                 <FormField
                                     control={form.control}
                                     name="k2"
                                     render={({ field }) => (
                                         <FormItem className="mb-6">
-                                            <FormLabel>Coupling Strength 2</FormLabel>
+                                            <FormLabel className="text-white">Coupling Strength 2</FormLabel>
                                             <FormControl>
                                                 <Input placeholder="Coupling Strength 2" {...field} className="w-full" />
                                             </FormControl>
@@ -189,15 +185,15 @@ export function InputValues() {
                                     )}
                                 />
                             </div>
-                        )}
+                    
 
                         
                     </div>
-                    <div className="flex justify-center mt-8">
+                    <div className="flex justify-center mt-2">
                         <Button type="submit">Submit</Button>
                     </div>
                 </form>
             </Form>
-        </>
+        </div>
     )
 }

@@ -17,9 +17,10 @@ export function SelectComponent() {
   return (
     <div className="flex justify-center items-center my-10">
       <Select onValueChange={(e)=>{
+        alert(e)
         settype(e)
       }}>
-        <SelectTrigger className="w-[180px]">
+        <SelectTrigger className="w-[180px] text-black">
           <SelectValue placeholder="Select a Graph" />
         </SelectTrigger>
         <SelectContent>

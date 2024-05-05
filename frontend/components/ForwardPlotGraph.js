@@ -15,7 +15,7 @@ const ChartContainer = ({ chartRef, chartData, chartOptions, ariaLabel }) => {
   }, [chartRef, chartData, chartOptions]);
 
   return (
-    <div className="relative h-screen">
+    <div className="relative h-[300px] w-[570px] bg-white rounded-lg">
       <canvas ref={chartRef} aria-label={ariaLabel}></canvas>
     </div>
   );
@@ -62,6 +62,12 @@ export default function Graph({ forward_r1, forward_lambda1, backward_r1, backwa
           display: true,
           text: 'k1',
         },
+        ticks: {
+          color: 'white', // Add this line to make x-axis numbers white
+        },
+        grid: {
+          color: 'white', // Make x-axis grid lines white
+        },
       },
       y: {
         type: 'linear',
@@ -69,6 +75,12 @@ export default function Graph({ forward_r1, forward_lambda1, backward_r1, backwa
         title: {
           display: true,
           text: 'r1',
+        },
+        ticks: {
+          color: 'white', // Add this line to make y-axis numbers white
+        },
+        grid: {
+          color: 'white', // Make x-axis grid lines white
         },
       },
     },
@@ -86,20 +98,10 @@ export default function Graph({ forward_r1, forward_lambda1, backward_r1, backwa
   };
 
   return (
-    <div className="relative flex flex-col min-w-0 break-words w-full mb-6  rounded bg-blueGray-700">
-      <div className="rounded-t mb-0 px-4 py-3 bg-transparent">
-        <div className="flex flex-wrap items-center">
-          <div className="relative w-full max-w-full flex-grow flex-1">
-            <h6 className="uppercase text-white bg-blueGray-700 mb-1 text-xs font-semibold">
-              Overview
-            </h6>
-            <h2 className="text-white text-xl font-semibold ">K vs R1 (Forward & Backward)</h2>
-          </div>
-        </div>
-      </div>
-      <div className="p-4 flex-auto">
-        <div className="grid grid-cols-1  ">
-          <div>
+    <div className="relative flex flex-col min-w-0 break-words w-full !overflow-hidden rounded bg-blueGray-700">
+      <div className=" flex-auto my-4 overflow-hidden">
+        <div className="grid grid-cols-2 ">
+          <div className="border-0 border-white mx-2 rounded-md !text-white">
             <h2 className="text-white text-lg font-semibold ">R1 Case (Forward)</h2>
             <ChartContainer
               chartRef={forwardR1Ref}
@@ -108,7 +110,7 @@ export default function Graph({ forward_r1, forward_lambda1, backward_r1, backwa
               ariaLabel="Forward k1 vs r1"
             />
           </div>
-          <div>
+          <div className="border-0 border-white mx-2 rounded-md !text-white">
             <h2 className="text-white text-lg font-semibold ">R1 Case (Backward)</h2>
             <ChartContainer
               chartRef={backwardR1Ref}
