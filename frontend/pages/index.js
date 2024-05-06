@@ -14,6 +14,8 @@ const Home = () => {
       container.classList.toggle('active');
       document.getElementById('container').classList.toggle('bg-white');
       document.getElementById('container').classList.toggle('bg-opacity-10');
+      document.getElementById('shadow1').classList.toggle('hidden')
+      document.getElementById('shadow2').classList.toggle('hidden')
     };
 
     hamburgerMenu.addEventListener('click', handleClick);
@@ -48,8 +50,8 @@ const Home = () => {
           </div>
 
         </div>
-        <div id="shadow" className="shadow one "></div>
-        <div id="shadow" className="shadow two "></div>
+        <div id="shadow1" className="shadow one hidden"></div>
+        <div id="shadow2" className="shadow two hidden"></div>
       </div>
 
       <div className="links">
@@ -111,7 +113,7 @@ const Home = () => {
         
         .container {
           width: 100%;
-          min-height: 100vh;
+          min-height: 100%;
           display: flex;
           justify-content: center;
           align-items: center;
